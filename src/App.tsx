@@ -875,48 +875,55 @@ function MainApp() {
       ) : (
       <main className="flex-1">
         {/* Hero Section - Full Screen */}
-        <section className="relative h-screen min-h-[600px] max-h-[900px]">
-          {/* Hero Banner Video - Edge to Edge */}
-          <div className="absolute inset-0 overflow-hidden">
-            <iframe
-              src="https://www.youtube.com/embed/afCtix2-BGI?autoplay=1&mute=1&loop=1&playlist=afCtix2-BGI&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1&enablejsapi=1"
-              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[100vw] h-[56.25vw] min-h-[100vh] min-w-[177.77vh] pointer-events-none"
-              allow="autoplay; encrypted-media"
-              title="Vision Studio Hero Video"
+        <section className="relative h-screen min-h-[600px] max-h-[900px] overflow-hidden">
+          {/* Hero Banner - Fallback Background */}
+          <div className="absolute inset-0 bg-stone-900">
+            <ImageWithFallback
+              src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtb2Rlcm4lMjBsaXZpbmclMjByb29tfGVufDF8fHx8MTc1OTY5MjI2MXww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"
+              alt="Modern Furniture Living Room"
+              className="w-full h-full object-cover opacity-80"
             />
             {/* Gradient Overlays */}
-            <div className="absolute inset-0 bg-gradient-to-b from-stone-900/40 via-stone-900/20 to-stone-900/60" />
+            <div className="absolute inset-0 bg-gradient-to-b from-stone-900/60 via-stone-800/40 to-stone-900/70" />
             <div className="absolute inset-0 bg-gradient-to-t from-stone-900/50 via-transparent to-transparent" />
           </div>
 
+          {/* Animated Pattern Overlay */}
+          <div className="absolute inset-0 opacity-10">
+            <div className="absolute inset-0" style={{
+              backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+              animation: 'float 20s ease-in-out infinite'
+            }} />
+          </div>
+
           {/* Hero Content Overlay */}
-          <div className="relative h-full flex flex-col items-start justify-center px-6 lg:px-8">
-            <div className="container mx-auto">
-              <div className="max-w-4xl">
-                <div className="inline-block mb-6 px-4 py-2 rounded-full bg-white/95 border border-white/20 shadow-lg backdrop-blur-sm">
-                  <p className="text-sm text-stone-900 font-medium">{t.hero.badge}</p>
-                </div>
-                <h1 className="mb-6 text-white drop-shadow-2xl text-[70px]">{t.hero.title}</h1>
-                <p className="text-white/95 text-lg md:text-xl max-w-2xl leading-relaxed mb-10 drop-shadow-lg">
-                  {t.hero.subtitle}
-                </p>
-                <div className="flex flex-col sm:flex-row gap-4">
-                  <Button size="lg" className="gap-2 rounded-full h-14 px-10 bg-white text-stone-900 hover:bg-white/90 shadow-xl" asChild>
-                    <a href="#room-ideas">
-                      {t.hero.cta}
-                      <ArrowRight className="h-5 w-5" />
-                    </a>
-                  </Button>
-                  <Button 
-                    size="lg" 
-                    variant="outline" 
-                    className="gap-2 rounded-full h-14 px-10 bg-transparent text-white border-2 border-white hover:bg-white/10 shadow-xl"
-                    onClick={() => setIsVideoOpen(true)}
-                  >
-                    {t.hero.ctaSecondary}
-                    <Play className="h-5 w-5" />
-                  </Button>
-                </div>
+          <div className="relative h-full flex flex-col items-center justify-center px-6 lg:px-8 text-center">
+            <div className="max-w-4xl">
+              <div className="inline-block mb-6 px-5 py-2.5 rounded-full bg-white/95 border border-white/20 shadow-xl backdrop-blur-sm">
+                <p className="text-sm text-stone-900 font-medium">{t.hero.badge}</p>
+              </div>
+              <h1 className="mb-6 text-white drop-shadow-xl text-[48px] md:text-[64px] lg:text-[72px] leading-tight font-bold tracking-tight">
+                {t.hero.title}
+              </h1>
+              <p className="text-white/95 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed mb-10 drop-shadow-lg">
+                {t.hero.subtitle}
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Button size="lg" className="gap-2 rounded-full h-12 md:h-14 px-8 md:px-10 bg-white text-stone-900 hover:bg-white/90 shadow-xl font-semibold" asChild>
+                  <a href="#room-ideas">
+                    {t.hero.cta}
+                    <ArrowRight className="h-5 w-5" />
+                  </a>
+                </Button>
+                <Button 
+                  size="lg" 
+                  variant="outline" 
+                  className="gap-2 rounded-full h-12 md:h-14 px-8 md:px-10 bg-transparent text-white border-2 border-white hover:bg-white/10 shadow-xl font-semibold"
+                  onClick={() => setIsVideoOpen(true)}
+                >
+                  {t.hero.ctaSecondary}
+                  <Play className="h-5 w-5" />
+                </Button>
               </div>
             </div>
           </div>
@@ -924,7 +931,7 @@ function MainApp() {
           {/* Scroll Indicator */}
           <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
             <div className="w-6 h-10 rounded-full border-2 border-white/60 flex items-start justify-center p-2">
-              <div className="w-1 h-2 bg-white/60 rounded-full" />
+              <div className="w-1 h-3 bg-white/60 rounded-full" />
             </div>
           </div>
         </section>

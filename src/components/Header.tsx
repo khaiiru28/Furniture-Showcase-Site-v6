@@ -35,13 +35,19 @@ export function Header({ user, onSignInClick, onSignOut, onViewAccount, onNaviga
   const [isRoomIdeasOpen, setIsRoomIdeasOpen] = useState(false);
   const [isHowItWorksOpen, setIsHowItWorksOpen] = useState(false);
   const [isDemoVideoOpen, setIsDemoVideoOpen] = useState(false);
+  const [isMenuScrolled, setIsMenuScrolled] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
+      const scrollPosition = window.scrollY;
+      setIsScrolled(scrollPosition > 50);
+      setIsMenuScrolled(scrollPosition > 200);
     };
 
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    // Initial check
+    handleScroll();
+    
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
@@ -50,32 +56,37 @@ export function Header({ user, onSignInClick, onSignOut, onViewAccount, onNaviga
     onSignOut();
   };
 
+  // Determine header style based on scroll state
+  const headerStyle = isScrolled || isMenuScrolled
+    ? "bg-white/98 backdrop-blur-xl shadow-md border-b border-stone-200"
+    : "bg-transparent";
+
+  const headerTextColor = isScrolled || isMenuScrolled
+    ? "text-stone-900"
+    : "text-white";
+
+  const headerButtonVariant = isScrolled || isMenuScrolled
+    ? "default"
+    : "secondary";
+
   return (
     <header 
-      className={`fixed top-0 z-50 w-full transition-all duration-300 ${
-        isScrolled 
-          ? "border-b border-border/40 bg-background/95 backdrop-blur-xl shadow-sm" 
-          : "border-b border-white/10 bg-transparent backdrop-blur-sm"
-      }`}
+      className={`fixed top-0 z-50 w-full transition-all duration-300 ease-in-out ${headerStyle}`}
     >
-      <div className="container mx-auto flex h-20 items-center justify-between px-6 lg:px-8">
-        <div className="flex items-center gap-12">
-          <div onClick={onNavigateHome} className="cursor-pointer">
+      <div className="container mx-auto flex h-16 md:h-20 items-center justify-between px-4 md:px-6 lg:px-8">
+        <div className="flex items-center gap-6 lg:gap-12">
+          <div onClick={onNavigateHome} className="cursor-pointer flex items-center gap-2">
             <Logo 
-              variant={isScrolled ? "default" : "light"} 
+              variant={isScrolled || isMenuScrolled ? "default" : "light"} 
               size="md"
             />
           </div>
-          <nav className="hidden lg:flex gap-8">
+          <nav className="hidden lg:flex gap-6 xl:gap-8">
             {/* How It Works Dropdown */}
             <div className="relative group">
               <a
                 href="#how-it-works"
-                className={`text-sm transition-colors inline-flex items-center gap-1 ${
-                  isScrolled 
-                    ? "text-muted-foreground hover:text-foreground" 
-                    : "text-white/90 hover:text-white"
-                }`}
+                className={`text-sm font-medium transition-colors inline-flex items-center gap-1 ${headerTextColor} hover:opacity-80`}
               >
                 {t.header.howItWorks}
                 <ChevronDown className="h-3 w-3 transition-transform group-hover:rotate-180" />
@@ -112,11 +123,7 @@ export function Header({ user, onSignInClick, onSignOut, onViewAccount, onNaviga
             <div className="relative group">
               <a
                 href="#room-ideas"
-                className={`text-sm transition-colors inline-flex items-center gap-1 ${
-                  isScrolled 
-                    ? "text-muted-foreground hover:text-foreground" 
-                    : "text-white/90 hover:text-white"
-                }`}
+                className={`text-sm font-medium transition-colors inline-flex items-center gap-1 ${headerTextColor} hover:opacity-80`}
               >
                 {t.header.roomIdeas}
                 <ChevronDown className="h-3 w-3 transition-transform group-hover:rotate-180" />
@@ -311,11 +318,7 @@ export function Header({ user, onSignInClick, onSignOut, onViewAccount, onNaviga
             <div className="relative group">
               <a
                 href="#showcase"
-                className={`text-sm transition-colors inline-flex items-center gap-1 ${
-                  isScrolled 
-                    ? "text-muted-foreground hover:text-foreground" 
-                    : "text-white/90 hover:text-white"
-                }`}
+                className={`text-sm font-medium transition-colors inline-flex items-center gap-1 ${headerTextColor} hover:opacity-80`}
               >
                 {t.header.showcase}
                 <ChevronDown className="h-3 w-3 transition-transform group-hover:rotate-180" />
@@ -380,34 +383,24 @@ export function Header({ user, onSignInClick, onSignOut, onViewAccount, onNaviga
             </div>
             <a 
               href="#products" 
-              className={`text-sm transition-colors ${
-                isScrolled 
-                  ? "text-muted-foreground hover:text-foreground" 
-                  : "text-white/90 hover:text-white"
-              }`}
+              className={`text-sm font-medium transition-colors ${headerTextColor} hover:opacity-80`}
             >
               {t.header.products}
             </a>
             <a 
               href="#testimonials" 
-              className={`text-sm transition-colors ${
-                isScrolled 
-                  ? "text-muted-foreground hover:text-foreground" 
-                  : "text-white/90 hover:text-white"
-              }`}
+              className={`text-sm font-medium transition-colors ${headerTextColor} hover:opacity-80`}
             >
               {t.header.reviews}
             </a>
           </nav>
         </div>
         
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 md:gap-3">
           {/* Language Selector */}
           <DropdownMenu>
-            <DropdownMenuTrigger className={`inline-flex items-center justify-center rounded-full h-10 w-10 transition-colors hover:bg-accent hover:text-accent-foreground ${
-              isScrolled ? "" : "text-white hover:bg-white/10"
-            }`}>
-              <Globe className="h-5 w-5" />
+            <DropdownMenuTrigger className={`inline-flex items-center justify-center rounded-full h-9 w-9 md:h-10 md:w-10 transition-colors hover:bg-accent hover:text-accent-foreground ${headerTextColor}`}>
+              <Globe className="h-4 w-4 md:h-5 md:w-5" />
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuItem onClick={() => setLanguage('en')}>
@@ -422,12 +415,10 @@ export function Header({ user, onSignInClick, onSignOut, onViewAccount, onNaviga
           <Button 
             variant="ghost" 
             size="icon" 
-            className={`relative ${
-              isScrolled ? "" : "text-white hover:bg-white/10"
-            }`}
+            className={`relative rounded-full h-9 w-9 md:h-10 md:w-10 ${headerTextColor}`}
             onClick={onCartClick}
           >
-            <ShoppingCart className="h-5 w-5" />
+            <ShoppingCart className="h-4 w-4 md:h-5 md:w-5" />
             {cartItemCount > 0 && (
               <span className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xs font-medium">
                 {cartItemCount}
@@ -440,22 +431,18 @@ export function Header({ user, onSignInClick, onSignOut, onViewAccount, onNaviga
             <Button 
               variant="ghost" 
               size="icon" 
-              className={`${
-                isScrolled ? "" : "text-white hover:bg-white/10"
-              }`}
+              className={`rounded-full h-9 w-9 md:h-10 md:w-10 ${headerTextColor}`}
               onClick={onAdminClick}
               title="Admin Dashboard"
             >
-              <Shield className="h-5 w-5" />
+              <Shield className="h-4 w-4 md:h-5 md:w-5" />
             </Button>
           )}
 
           {user ? (
             <DropdownMenu>
-              <DropdownMenuTrigger className={`hidden lg:inline-flex items-center justify-center rounded-full h-10 w-10 transition-colors hover:bg-accent hover:text-accent-foreground ${
-                isScrolled ? "" : "text-white hover:bg-white/10"
-              }`}>
-                <User className="h-5 w-5" />
+              <DropdownMenuTrigger className={`hidden lg:inline-flex items-center justify-center rounded-full h-9 w-9 md:h-10 md:w-10 transition-colors hover:bg-accent hover:text-accent-foreground ${headerTextColor}`}>
+                <User className="h-4 w-4 md:h-5 md:w-5" />
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-56">
                 <DropdownMenuLabel>
@@ -488,10 +475,10 @@ export function Header({ user, onSignInClick, onSignOut, onViewAccount, onNaviga
             </DropdownMenu>
           ) : (
             <Button
-              variant={isScrolled ? "default" : "secondary"}
+              variant={headerButtonVariant}
               size="sm"
               onClick={onSignInClick}
-              className="hidden lg:flex rounded-full h-9 px-5"
+              className="hidden lg:flex rounded-full h-9 px-5 md:h-10 md:px-6 font-medium"
             >
               {t.header.signIn}
             </Button>
@@ -500,12 +487,10 @@ export function Header({ user, onSignInClick, onSignOut, onViewAccount, onNaviga
           <Button 
             variant="ghost" 
             size="icon" 
-            className={`lg:hidden ${
-              isScrolled ? "" : "text-white hover:bg-white/10"
-            }`}
+            className={`lg:hidden rounded-full h-9 w-9 md:h-10 md:w-10 ${headerTextColor}`}
             onClick={() => setIsMobileMenuOpen(true)}
           >
-            <Menu className="h-5 w-5" />
+            <Menu className="h-4 w-4 md:h-5 md:w-5" />
           </Button>
         </div>
       </div>
