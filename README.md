@@ -10,3 +10,4 @@
   Run `npm run dev` to start the development server.
   # Furniture-Showcase-Site-v6
 # Furniture-Showcase-Site-v7
+# Furniture-Showcase-Site-v7
